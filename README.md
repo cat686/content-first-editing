@@ -1,36 +1,52 @@
 # Content-first Editing | 内容优先的文本润色
 
-面向已有草稿的 Agent Skill。先充分生成，再精确编辑。目标为内容保真、阅读效率、自然度和专业表达；不面向 AI 检测规避。
+简体中文 · [English](README.en.md)
 
-## 使用
+Content-first Editing 是一个润色中英文成稿的 Agent Skill，适用于文章、论文、报告和技术文档。初稿完成后，用它删去套话和重复、理顺句段，同时保留原稿的事实、数据、引用、限定条件和作者立场。
 
-将整个 `content-first-editing` 目录复制到支持 Agent Skills 的客户端所配置的 skills 目录。入口为 `SKILL.md`。无需外部 API 或依赖；可选检查脚本只使用 Python 3 标准库。
+## 快速开始
 
-在普通对话中也可直接提供 `SKILL.md` 内容作为后置编辑指令；参考文件可按需附上。
+**交给 Agent 安装**
 
-调用示例：
+把下面这句发给支持安装 Skills 的 Agent。
 
-- 使用 content-first-editing 标准润色以下已有稿件，只输出正文。
-- 先完整检索资料并撰写信息充分的初稿，完成后调用 content-first-editing 润色。保留事实、证据和专业细节。
-- 使用 content-first-editing 深度编辑第二章，保留引用与数据，另列证据缺口。
-- 使用 content-first-editing 仅审阅，找出无实质信息和阅读障碍，不改文件。
+> 帮我从 <https://github.com/cat686/content-first-editing> 下载并安装 Content-first Editing Skill。
 
-## 结构
+**在终端安装**
 
-- `SKILL.md`：核心编辑契约、八条原则与流程
-- `references/genres.md`：文体与读者适配
-- `references/patterns.md`：问题模式及正反例
-- `references/research-notes.md`：调研来源、借鉴与限制
-- `evals/cases.jsonl`：人工或模型评测用例（未做跨模型实验）
-- `evals/README.md`：评测方法及验收标准
-- `scripts/check_invariants.py`：数字、引用、链接与行内代码的启发式差异提示
-- `scripts/test_check_invariants.py`：脚本单元测试
+在项目目录运行以下命令，按提示选择你的 Agent。
 
-检查器仅适用于 UTF-8 纯文本或 Markdown，不验证事实、引用指向、数字语义、Word 格式等。匹配变化可来自合理编辑，未匹配到的错误也可能存在。运行时不要把报告当作唯一验收依据。
-
-```sh
-python scripts/check_invariants.py before.md after.md
-python -m unittest discover -s scripts -p 'test_*.py'
+```bash
+npx skills add cat686/content-first-editing --skill content-first-editing
 ```
 
-v1.0 为原创指令包，按 Agent Skills 公开格式组织，尚未在各客户端实际安装及跨模型实测。未指定开源许可证；发布者可在发布前自行选择许可证并检查项目名称冲突。
+也可以手动把整个仓库复制到客户端的 Skills 目录。
+
+**使用**
+
+安装后，粘贴草稿或提供文件路径，再发送类似的指令。
+
+> 用 content-first-editing 润色 `draft.md`。删减套话和重复，保留数据、引用和结论的适用范围。
+
+只想听修改建议时，可以指定“仅审阅”。需要重排段落或调整论证顺序时，可以指定“深度编辑”。
+
+## 改写示例
+
+**原稿**
+
+> 这不是一次简单的流程优化，而是给人工审核加了一道质量门禁。系统在提交工单时校验必填字段，校验通过后，工单才会进入人工审核。平均审核时间从 18 分钟降到 12 分钟，但这一结果只在重复提交率超过 40% 的测试批次中观察到。
+
+**润色后**
+
+> 系统在工单提交时校验必填字段，通过校验后才将工单转给人工审核。只有在重复提交率超过 40% 的测试批次中，平均审核时间才从 18 分钟降到 12 分钟。
+
+## 主要结构
+
+| 路径 | 内容 |
+| --- | --- |
+| [`SKILL.md`](SKILL.md) | Skill 入口，包含编辑模式、流程和保真检查 |
+| [`references/`](references/) | 文体指南、常见表达问题和调研笔记 |
+| [`scripts/`](scripts/) | 可选的差异检查脚本和单元测试。脚本可标出数字、引用标记、链接和行内代码的变化 |
+| [`evals/`](evals/) | 评测用例、方法与验收标准 |
+
+当前版本未附许可证。
